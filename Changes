@@ -4,6 +4,7 @@ Revision history for Locale-Maketext-Lexicon-Getcontext
 
   [Tests]
   - improve tests
+  - include extended tests in xt/
 
 0.02 / 2016-08-28 / SAPER
 
