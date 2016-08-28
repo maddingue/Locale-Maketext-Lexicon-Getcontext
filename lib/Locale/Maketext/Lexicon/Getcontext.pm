@@ -5,22 +5,17 @@ use strict;
 use Locale::Maketext::Lexicon::Gettext;
 
 our $VERSION = "0.01";
-our ( $InputEncoding, $OutputEncoding, $DoEncoding );
+my ( $InputEncoding, $OutputEncoding, $DoEncoding );
 
-# vars
-*InputEncoding  = \$Locale::Maketext::Lexicon::Gettext::InputEncoding;
-*OutputEncoding = \$Locale::Maketext::Lexicon::Gettext::OutputEncoding;
-*DoEncoding     = \$Locale::Maketext::Lexicon::Gettext::DoEncoding;
+sub input_encoding  {$InputEncoding}
+sub output_encoding {$OutputEncoding}
 
 # functions
-*input_encoding     = \&Locale::Maketext::Lexicon::Gettext::input_encoding;
-*output_encoding    = \&Locale::Maketext::Lexicon::Gettext::output_encoding;
-*parse_metadata     = \&Locale::Maketext::Lexicon::Gettext::parse_metadata;
 *parse_mo           = \&Locale::Maketext::Lexicon::Gettext::parse_mo;
-*transform          = \&Locale::Maketext::Lexicon::Gettext::transform;
 *_unescape          = \&Locale::Maketext::Lexicon::Gettext::_unescape;
 *_gettext_to_maketext
     = \&Locale::Maketext::Lexicon::Gettext::_gettext_to_maketext;
+
 
 
 #
@@ -119,6 +114,74 @@ sub parse {
         ? ( { @metadata, @ret }, {@comments}, {@fuzzy} )
         : ( { @metadata, @ret } );
 
+}
+
+
+#
+# parse_metadata()
+# --------------
+# copy-pasted from Locale::Maketext::Lexicon::Gettext, with no change,
+# because it accesses the $InputEncoding and $OutputEncoding vars
+#
+sub parse_metadata {
+    return map {
+              (/^([^\x00-\x1f\x80-\xff :=]+):\s*(.*)$/)
+            ? ( $1 eq 'Content-Type' )
+                ? do {
+                    my $enc = $2;
+                    if ( $enc =~ /\bcharset=\s*([-\w]+)/i ) {
+                        $InputEncoding = $1 || '';
+                        $OutputEncoding
+                            = Locale::Maketext::Lexicon::encoding()
+                            || '';
+                        $InputEncoding = 'utf8'
+                            if $InputEncoding =~ /^utf-?8$/i;
+                        $OutputEncoding = 'utf8'
+                            if $OutputEncoding =~ /^utf-?8$/i;
+                        if (Locale::Maketext::Lexicon::option('decode')
+                            and ( !$OutputEncoding
+                                or $InputEncoding ne $OutputEncoding )
+                            )
+                        {
+                            require Encode::compat if $] < 5.007001;
+                            require Encode;
+                            $DoEncoding = 1;
+                        }
+                    }
+                    ( "__Content-Type", $enc );
+                }
+                : ( "__$1", $2 )
+            : ();
+    } split( /\r*\n+\r*/, transform(pop) );
+}
+
+
+#
+# transform()
+# ---------
+# copy-pasted from Locale::Maketext::Lexicon::Gettext, with no change,
+# because it accesses the $InputEncoding and $OutputEncoding vars
+#
+sub transform {
+    my $str = shift;
+
+    if ( $DoEncoding and $InputEncoding ) {
+        $str
+            = ( $InputEncoding eq 'utf8' )
+            ? Encode::decode_utf8($str)
+            : Encode::decode( $InputEncoding, $str );
+    }
+
+    $str =~ s/\\([0x]..|c?.)/qq{"\\$1"}/eeg;
+
+    if ( $DoEncoding and $OutputEncoding ) {
+        $str
+            = ( $OutputEncoding eq 'utf8' )
+            ? Encode::encode_utf8($str)
+            : Encode::encode( $OutputEncoding, $str );
+    }
+
+    return _gettext_to_maketext($str);
 }
 
 
