@@ -1,5 +1,10 @@
 Revision history for Locale-Maketext-Lexicon-Getcontext
 
+0.03 / 2016-08-28 / SAPER
+
+  [Tests]
+  - improve tests
+
 0.02 / 2016-08-28 / SAPER
 
   [Code]
