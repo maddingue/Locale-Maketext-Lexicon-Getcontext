@@ -1,8 +1,10 @@
 #!perl
-use v5.14;
+use utf8;
+use open ":std", "OUT" => "encoding(UTF-8)";
 use strict;
 use warnings;
 use Test::More;
+use Locale::Maketext::Lexicon _auto => 0, _decode => 1, _style => "gettext";
 
 
 opendir my $dh, "t/po/off-common/"
@@ -10,14 +12,28 @@ opendir my $dh, "t/po/off-common/"
 my @files = map "t/po/off-common/$_", grep {!/^\./} readdir $dh;
 closedir $dh;
 
-my %lang = (
-    en  => "English",
-    he  => "Hebrew",
-    fr  => "French",
-    ja  => "Japanese",
+my %field = (
+    ":langname" => {
+        en  => "English",
+        fr  => "French",
+        he  => "Hebrew",
+        ja  => "Japanese",
+    },
+    error_reset_already_connected => {
+        en  => "You are already signed in.",
+        fr  => "Vous avez déjà une session ouverte.",
+        he  => "כבר נכנסת.",
+        ja  => undef,
+    },
+    ingredients => {
+        en  => "Ingredients",
+        fr  => "Ingrédients",
+        he  => "רכיבים",
+        ja  => "材料",
+    },
 );
 
-plan tests => 1 + 3 * @files;
+plan tests => 1 + @files * (2 + keys %field);
 
 my $module = "Locale::Maketext::Lexicon::Getcontext";
 
@@ -35,6 +51,10 @@ for my $file (@files) {
     # check some fields
     my ($lc) = $file =~ m:/([a-z]+)\.po$:;
     is $lexicon->{":langtag"}, $lc, ":langtag = $lc";
-    is $lexicon->{":langname"}, $lang{$lc}, ":langname = $lang{$lc}";
+
+    for my $field (sort keys %field) {
+        is $lexicon->{$field}, $field{$field}{$lc},
+            "$field = " . ($field{$field}{$lc} // "<undef>");
+    }
 }
 
