@@ -1,6 +1,12 @@
 Revision history for Locale-Maketext-Lexicon-Getcontext
 
-0.01 / 2016-07-xx / SAPER
+0.02 / 2016-08-28 / SAPER
 
-  First release, forked from Locale::Maketext::Lexicon::Gettext v1.00.
+  [Code]
+  - fixing stupid code by stupidly copying & pasting more code
+
+0.01 / 2016-08-25 / SAPER
+
+  [Code]
+  - first release, forked from Locale::Maketext::Lexicon::Gettext v1.00.
 
