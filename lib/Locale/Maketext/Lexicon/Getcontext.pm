@@ -69,7 +69,7 @@ sub parse {
     foreach (@_) {
         s/[\015\012]*\z//;    # fix CRLF issues
 
-        /^(msgctxt|msgstr) +"(.*)" *$/
+        /^(msgctxt|msgid|msgstr) +"(.*)" *$/
             ? do {            # leading strings
             $var{$1} = $2;
             $key = $1;
@@ -99,6 +99,8 @@ sub parse {
             $process->($_);
             }
             : ();
+
+	
 
     }
 
