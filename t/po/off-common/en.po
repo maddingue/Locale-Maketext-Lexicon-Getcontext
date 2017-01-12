@@ -49,6 +49,12 @@ msgctxt "add_user_confirm"
 msgid "<p>Thanks for joining. You can now sign-in on the site to add and edit products.</p>"
 msgstr "<p>Thanks for joining. You can now sign-in on the site to add and edit products.</p>"
 
+msgctxt "multiline_msgid"
+msgid "Blabla\n"
+"Blablabla"
+msgstr "Pouet pouet"
+"Pouet"
+
 msgctxt "add_user_email_body"
 msgid "Hello <NAME>,\n"
 "\n"

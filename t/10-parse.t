@@ -31,6 +31,9 @@ my %field = (
         he  => "רכיבים",
         ja  => "材料",
     },
+    multiline_msgid => {
+	en => "Pouet pouetPouet",
+    },
 );
 
 plan tests => 1 + @files * (2 + keys %field);
