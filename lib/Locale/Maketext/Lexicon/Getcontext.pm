@@ -4,7 +4,7 @@ use strict;
 
 use Locale::Maketext::Lexicon::Gettext;
 
-our $VERSION = "0.03";
+our $VERSION = "0.04";
 my ( $InputEncoding, $OutputEncoding, $DoEncoding );
 
 sub input_encoding  {$InputEncoding}

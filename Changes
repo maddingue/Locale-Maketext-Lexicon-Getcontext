@@ -1,5 +1,10 @@
 Revision history for Locale-Maketext-Lexicon-Getcontext
 
+0.04 / 2017-01-12 / SAPER
+
+  [Code]
+  - Continuing lines of msgid wrongly added to msgctxt (Stéphane Gigandet).
+
 0.03 / 2016-08-28 / SAPER
 
   [Tests]
