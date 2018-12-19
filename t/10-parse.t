@@ -56,8 +56,9 @@ for my $file (@files) {
     is $lexicon->{":langtag"}, $lc, ":langtag = $lc";
 
     for my $field (sort keys %field) {
-        is $lexicon->{$field}, $field{$field}{$lc},
-            "$field = " . ($field{$field}{$lc} // "<undef>");
+        my $value = $field{$field}{$lc};
+        is $lexicon->{$field}, $value,
+            "$field = " . (defined $value)?($value):("<undef>");
     }
 }
 
